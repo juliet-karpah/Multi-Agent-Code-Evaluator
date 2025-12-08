@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "difficulty": "easy",
+    "category": "string",
+    "title": "Valid Palindrome",
+    "description": "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.",
+    "tests": [
+      { "input": "A man, a plan, a canal: Panama", "expected": true },
+      { "input": "race a car", "expected": false },
+      { "input": " ", "expected": true }
+    ]
+  },
+  {
+    "id": 2,
+    "difficulty": "easy",
+    "category": "array",
+    "title": "Majority Element",
+    "description": "Given an array nums of size n, return the majority element.",
+    "tests": [
+      { "input": [3, 2, 3], "expected": 3 },
+      { "input": [2, 2, 1, 1, 1, 2, 2], "expected": 2 }
+    ]
+  },
+  {
+    "id": 3,
+    "difficulty": "easy",
+    "category": "array",
+    "title": "Contains Duplicate",
+    "description": "Given an integer array nums, return true if any value appears at least twice.",
+    "tests": [
+      { "input": [1, 2, 3, 1], "expected": true },
+      { "input": [1, 2, 3, 4], "expected": false },
+      { "input": [1,1,1,3,3,4,3,2,4,2], "expected": true }
+    ]
+  },
+  {
+    "id": 4,
+    "difficulty": "easy",
+    "category": "string",
+    "title": "Longest Palindrome",
+    "description": "Return the length of the longest palindrome that can be built with the letters of a string.",
+    "tests": [
+      { "input": "abccccdd", "expected": 7 },
+      { "input": "a", "expected": 1 }
+    ]
+  },
+  {
+    "id": 5,
+    "difficulty": "easy",
+    "category": "dp",
+    "title": "Climbing Stairs",
+    "description": "In how many distinct ways can you climb to the top?",
+    "tests": [
+      { "input": 2, "expected": 2 },
+      { "input": 3, "expected": 3 }
+    ]
+  }
+]
