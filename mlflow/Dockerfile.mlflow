@@ -1,0 +1,21 @@
+
+FROM python:3.11-slim
+
+
+RUN pip install mlflow[extras]
+
+
+RUN mkdir -p /mlflow/mlruns
+
+
+EXPOSE 5000
+
+
+WORKDIR /mlflow
+
+
+CMD mlflow server \
+    --backend-store-uri sqlite:///mlflow.db \
+    --default-artifact-root /mlflow/mlruns \
+    --host 0.0.0.0 \
+    --port 5000

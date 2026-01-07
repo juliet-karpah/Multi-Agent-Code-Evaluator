@@ -2,6 +2,7 @@ import tempfile
 import subprocess
 import os
 import signal
+import time
 
 TIME_LIMIT = 2
 
@@ -58,12 +59,36 @@ def run_code_in_sandbox(agent_code, tests, function_name):
         preexec_fn=os.setsid,
     )
     try:
+        start = time.perf_counter()
         stdout, stderr = process.communicate(timeout=TIME_LIMIT)
-        return stdout, stderr
+        end = time.perf_counter()
+        runtime_ms = (end - start) * 1000
+
+        exit_code = process.returncode
+        timed_out = 0
+        crashed = int(exit_code != 0)
+        execution_success = int(exit_code == 0 and stderr == "")
+
+        return {
+            "stdout": stdout,
+            "stderr": stderr,
+            "runtime_ms": runtime_ms,
+            "exit_code": exit_code,
+            "timed_out": timed_out,
+            "crashed": crashed,
+            "execution_success": execution_success,
+        }
     except subprocess.TimeoutExpired:
         os.killpg(process.pid, signal.SIGKILL)
-        return {"error": "Execution Timeout"}
+        return {
+            "stdout": "",
+            "stderr": "Execution Timeout",
+            "runtime_ms": TIME_LIMIT * 1000,
+            "exit_code": None,
+            "timed_out": 1,
+            "crashed": 0,          
+            "execution_success": 0,
+        }
+
     finally:
         os.remove(file_path)
-
-    
