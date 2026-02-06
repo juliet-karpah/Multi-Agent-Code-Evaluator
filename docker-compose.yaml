@@ -3,7 +3,7 @@ version: "3.9"
 services:
   backend:
     build:
-      context: .
+      context: ./Backend
       dockerfile: Dockerfile.backend
     container_name: fastapi-backend
     ports:
@@ -17,7 +17,7 @@ services:
 
   mlflow:
     build:
-      context: .
+      context: ./mlflow
       dockerfile: Dockerfile.mlflow
     container_name: mlflow-ui
     ports:
