@@ -1,6 +1,6 @@
 # LLM-Eval
 
-LLM-Eval is an **evaluator-first, human-in-the-loop evaluation system** for large language models, focused on **measuring, reviewing, and comparing model behavior on coding tasks**.
+LLM-Eval is an **evaluator-first, human-in-the-loop evaluation system** for large language models, focused on **measuring, reviewing, and comparing model responses on python coding tasks**.
 
 It combines:
 
@@ -23,7 +23,7 @@ The system is designed to mirror **real internal evaluation infrastructure** use
 
 ---
 
-# ✅ MVP 
+# Features
 
 ## 1. CLI Evaluation Harness
 
@@ -45,13 +45,6 @@ load config
 → log to MLflow
 ```
 
-Features:
-
-* config-driven runs (YAML)
-* explicit model/version selection
-* deterministic execution
-* single-command reproducibility
-
 ---
 
 ## 2. Objective Execution-Based Evaluation
@@ -69,7 +62,7 @@ Features:
 
 ## 3. LLM-Assisted Review (Judge + Pre-Review)
 
-A stronger LLM is used to **assist review**, not replace humans.
+A stronger LLM is used to review the code responses.
 
 Capabilities:
 
@@ -77,17 +70,9 @@ Capabilities:
 * highlight problematic spans
 * provide critique and confidence score
 
-Used to:
-
-* accelerate human review
-* reduce reviewer disagreement
-* surface ambiguous cases early
-
 ---
 
 ## 4. Human-in-the-Loop Review Interface (React)
-
-A **reviewer-focused UI**, inspired by real internal tooling.
 
 ### Reviewer Workflow
 
@@ -95,16 +80,11 @@ A **reviewer-focused UI**, inspired by real internal tooling.
 * selectable text spans
 * structured issue categories
 * one-click accept / override of LLM suggestion
-* optional human rationale
-
-Outputs:
-
-* structured human preference data
-* linked to runs, models, configs, and prompts
+* optional critique explanation
 
 ---
 
-## 5. Preference Data System (RLHF-Compatible)
+## 5. Preference Data System
 
 Human and LLM judgments are stored as **first-class artifacts**:
 
@@ -130,16 +110,12 @@ This produces **clean preference datasets** suitable for downstream RLHF-style w
 
 ---
 
-## 7. Dockerized Deployment
-
-Required for MVP.
+## 7. Dockerized Deployment with Docker-compose
 
 * Backend (FastAPI)
 * Frontend (React)
 * MLflow server
-* Database
-
-Single command startup:
+* PostgreSQL Database
 
 ```bash
 docker-compose up --build
@@ -155,69 +131,5 @@ The MVP includes:
 * example CLI output
 * how to run locally
 * explanation of human-in-the-loop workflow
-
----
-
-# 🚀 Stretch Goals (Post-MVP)
-
-## 1. Aggregation & Model Stability Analysis
-
-* aggregate scores across problems
-* variance-based stability metrics
-* model-level summaries
-* baseline comparison
-
----
-
-## 2. Regression Detection & CI Gates
-
-* detect regressions vs baselines
-* threshold-based alerts
-* CI-compatible exit codes
-* later: statistical significance tests
-
----
-
-## 3. Consensus Reduction & Escalation Logic
-
-* automatically route only hard cases to consensus
-* disagreement clustering
-* reviewer calibration metrics
-
----
-
-## 4. Dataset Versioning & Export
-
-* versioned preference datasets
-* export to JSON / CSV
-* compatibility with RLHF pipelines
-
----
-
-## 5. Additional Language Support
-
-* extend sandbox adapters to:
-
-  * JavaScript / TypeScript
-* same evaluation + review abstractions
-
----
-
-## 6. Time-Series & Drift Visualization
-
-* model behavior over time
-* emerging failure modes
-* longitudinal analysis dashboards
-
----
-
-# What LLM-Eval Is *Not*
-
-* Not a model training system
-* Not a benchmark leaderboard
-* Not a demo-first app
-* Not a fine-tuning pipeline
-
-LLM-Eval is **evaluation infrastructure**.
 
 ---
