@@ -3,13 +3,21 @@ import os
 
 file_path = os.path.join(os.path.dirname(__file__), "data/questions.json")
 
-def load_questions():
+def load_questions(file_path, filters=None):
     try:
         with open(file_path, "r") as f:
-            questions_data = json.load(f)
-        return questions_data
+            questions = json.load(f)
+
+        if filters:
+            for key, values in filters.items():
+                questions = [q for q in questions if q.get(key) in values]
+
+        return questions
+
     except Exception as e:
-        raise RuntimeError(f"Error: An unexpected error occurred while loading JSON: {e}")
+        raise RuntimeError(
+            f"Error: An unexpected error occurred while loading JSON: {e}"
+        )
 
 
 def load_question(id):

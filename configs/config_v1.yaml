@@ -1,0 +1,14 @@
+models:
+  source: infra/models/registry
+  selected:
+    - QWEN
+    - MISTRAL
+
+questions:
+  file: backend/app/data/questions.json
+  filter:
+    difficulty: ["easy"]
+
+judge:
+  enabled: true
+  model: claude-sonnet

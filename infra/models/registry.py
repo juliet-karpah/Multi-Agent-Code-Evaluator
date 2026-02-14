@@ -18,4 +18,4 @@ def resolve_models(selected):
     if Models.ALL in selected:
         return list(MODEL_REGISTRY.values())
     
-    return [MODEL_REGISTRY[key] for key in selected]
+    return [MODEL_REGISTRY[Models[s]] for s in selected]
