@@ -3,12 +3,6 @@ from typing import List, Any, Dict
 from infra.models.registry import Models
 from uuid import UUID
 
-
-class EvaluationRequestModel(BaseModel):
-    question_id: int
-    models: List[Models]
-
-
 class RunRecord(BaseModel):
     id: UUID
     models: List[int]

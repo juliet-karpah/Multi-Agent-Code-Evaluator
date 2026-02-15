@@ -11,4 +11,5 @@ questions:
 
 judge:
   enabled: true
-  model: claude-sonnet
+  model: qwen2.5-32b
+  prompt_version: v1
