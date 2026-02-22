@@ -29,3 +29,14 @@ class ProblemScoreRecord(BaseModel):
     pass_rate: float
     execution_success: bool
     runtime_ms: float
+
+
+class JudgeEvalRecord(BaseModel):
+    run_id: UUID 
+    question_id: int
+    model_a: str
+    model_b: str
+    winner: str
+    reason: str
+    judge_model: str
+    judge_config: UUID

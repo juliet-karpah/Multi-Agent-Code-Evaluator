@@ -191,3 +191,6 @@ Return ONLY valid Python code.
         "scores": scored_models,
         "ranking": ranked,
     }
+
+def run_judge():
+    

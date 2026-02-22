@@ -26,3 +26,6 @@ def get_all_evaluations(model_id):
     Retrieve all for a model
     """
     return client.table("evaluations").select("*").eq("model_key", model_id).execute()
+
+def insert_judge_eval(record:Evaluation.JudgeEvalRecord ):
+    return client.table("judge_evals").insert(record.model_dump()).execute()
