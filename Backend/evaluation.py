@@ -3,7 +3,7 @@ import json
 import ast
 
 from infra.sandbox.executor import run_code_in_sandbox
-from infra.models.registry import resolve_models
+# from infra.models.registry import resolve_models
 from util.questions import load_question
 from infra.models.huggingface import HuggingClient
 from infra.models.scoring import score_problem, rank_models_per_run
@@ -70,7 +70,7 @@ def run_evaluation(
     hf_client: HuggingClient,
 ):
     question = load_question(question_id)
-    models = resolve_models(models)
+    # models = resolve_models(models)
 
     if not question:
         raise ValueError(f"Question does not exist: {question_id}")
@@ -191,6 +191,3 @@ Return ONLY valid Python code.
         "scores": scored_models,
         "ranking": ranked,
     }
-
-def run_judge():
-    

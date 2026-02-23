@@ -1,12 +1,12 @@
 import os
 from huggingface_hub import InferenceClient
 import asyncio
-from base import ModelCient
+from base import ModelClient
 
 HF_API_KEY = os.getenv("HF_API_KEY")
 
 
-class HuggingClient(ModelCient):
+class HuggingClient(ModelClient):
     def __init__(self, api_key=None):
         self.api_key = api_key or HF_API_KEY
 
@@ -29,7 +29,7 @@ class HuggingClient(ModelCient):
         )
         return completion.choices[0].message
     
-    async def generate_code(self, model, prompt):
+    async def generate(self, model, prompt):
         """
         Calls the inference api for the specified model(s)
         with the problem.

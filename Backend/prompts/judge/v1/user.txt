@@ -1,0 +1,22 @@
+f"""
+Problem:
+{coding_question}
+
+Assumption:
+Both responses below are correct.
+
+Response A:
+{outputs['model_a']}
+
+Response B:
+{outputs['model_b']}
+
+Instructions:
+- Compare Response A and Response B using the evaluation criteria.
+- Select exactly one winner: A or B.
+- Explain your reasoning briefly.
+
+Output format:
+Winner: <A or B>
+Reason: <short explanation>
+"""

@@ -4,6 +4,9 @@ models:
     - QWEN
     - MISTRAL
 
+solver:
+  prompt_version: v1
+
 questions:
   file: backend/app/data/questions.json
   filter:
@@ -11,5 +14,5 @@ questions:
 
 judge:
   enabled: true
-  model: qwen2.5-32b
+  model: QWEN_JUDGE
   prompt_version: v1

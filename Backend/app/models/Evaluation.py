@@ -39,4 +39,5 @@ class JudgeEvalRecord(BaseModel):
     winner: str
     reason: str
     judge_model: str
+    prompt_version: str
     judge_config: UUID

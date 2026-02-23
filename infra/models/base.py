@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import asyncio
 
 
-class ModelCient(ABC):
+class ModelClient(ABC):
     """
     Serves as base class through inheritance
 
@@ -10,7 +10,7 @@ class ModelCient(ABC):
     """
 
     @abstractmethod
-    async def generate_code(self, model, problem):
+    async def generate(self, model, problem):
         """
         Every Class that inherits ModelClient must implement.
 
@@ -21,7 +21,7 @@ class ModelCient(ABC):
 
     async def generate_from_many(self, models, problem):
         tasks = {
-            model: asyncio.create_task(self.generate_code(model, problem))
+            model: asyncio.create_task(self.generate(model, problem))
             for model in models
         }
 
