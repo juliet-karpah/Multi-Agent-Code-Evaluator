@@ -66,7 +66,7 @@ async def main():
         print(f"Completed {question_id} and stored={result['run_id']}")
 
         if judge:
-            judge_evaluation = await judge.evaluate(
+            judge_evaluation = await judge.compare(
                 run_id=result["run_id"],
                 question_id=question_id,
                 prompt=result["prompt"],
@@ -76,6 +76,11 @@ async def main():
             print(f"Judge winner={judge_evaluation.winner}"
                   f"(confidence={judge_evaluation.confidence})"
                   )
+            # if judge_evaluation["winner"] == "A":
+            #     winner_response_id = response_a.id
+            # else:
+            #     winner_response_id = response_b.id
+            
 
     print("Evaluation complete")
 

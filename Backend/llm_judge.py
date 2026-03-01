@@ -26,7 +26,12 @@ class LLMJudge:
 
         try: 
             data = json.loads(text)
-        except json.JSONDecodeError:
+
+            if data.get("winner") not in ("A", "B"):
+                raise ValueError("Invalid winner value")
+            
+            data["confidence"] = float(data.get("confidence",0.0))
+        except (json.JSONDecodeError, ValueError):
             data = {
                 "winner": "A",
                 "reason": "Failed Judge Evaluation",

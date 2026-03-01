@@ -6,10 +6,10 @@ Assumption:
 Both responses below are correct.
 
 Response A:
-{outputs['model_a']}
+{model_a}
 
 Response B:
-{outputs['model_b']}
+{model_b}
 
 Instructions:
 - Compare Response A and Response B using the evaluation criteria.

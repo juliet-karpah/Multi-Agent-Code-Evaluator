@@ -34,10 +34,10 @@ class ProblemScoreRecord(BaseModel):
 class JudgeEvalRecord(BaseModel):
     run_id: UUID 
     question_id: int
-    model_a: str
-    model_b: str
-    winner: str
+    response_a_id: UUID
+    response_a_id: UUID
+    winner_response_id: UUID
     reason: str
-    judge_model: str
+    judge_model_id: int
     prompt_version: str
-    judge_config: UUID
+    confidence: float

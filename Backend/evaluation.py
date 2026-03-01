@@ -6,6 +6,7 @@ from infra.sandbox.executor import run_code_in_sandbox
 # from infra.models.registry import resolve_models
 from util.questions import load_question
 from infra.models.huggingface import HuggingClient
+from prompts.loader import load_prompt
 from infra.models.scoring import score_problem, rank_models_per_run
 from app.services.supabase_client import insert_run, insert_raw_eval, insert_problem_score
 from infra.observability.mlflow_logger import log_run
@@ -68,6 +69,7 @@ def run_evaluation(
     question_id: str,
     models: list[str],
     hf_client: HuggingClient,
+    prompt_version: str
 ):
     question = load_question(question_id)
     # models = resolve_models(models)
@@ -87,14 +89,13 @@ def run_evaluation(
         }
     )
 
-    prompt = f"""
-Write a python solution for this algorithm:
-Title: {question["title"]}
-Description: {question["description"]}
-
-Return ONLY valid Python code.
-"""
-
+    system_prompt = load_prompt("solver", prompt_version, "system")
+    user_prompt =  prompt = f"""
+        Problem:
+        Title: {question["title"]}
+        Description: {question["description"]}
+        """
+    prompt = f"{system_prompt}\n\n{user_prompt}"
     
     agent_responses = hf_client.generate_from_many(
         models=models,
