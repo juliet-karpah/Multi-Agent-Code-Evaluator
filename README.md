@@ -1,5 +1,9 @@
 # LLM-Eval
 
+## Architectural Design
+
+![design](https://github.com/juliet-karpah/Multi-Agent-Code-Evaluator/blob/main/architecture.png)
+
 Key Components:
 - CLI Runner: orchestrates evaluation experiments
 - Docker Sandbox: safely executes generated code
