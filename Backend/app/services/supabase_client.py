@@ -28,4 +28,4 @@ def get_all_evaluations(model_id):
     return client.table("evaluations").select("*").eq("model_key", model_id).execute()
 
 def insert_judge_eval(record:Evaluation.JudgeEvalRecord ):
-    return client.table("judge_evals").insert(record.model_dump()).execute()
+    return client.table("judge_evaluation_results").insert(record.model_dump()).execute()

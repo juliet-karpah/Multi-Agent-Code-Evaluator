@@ -1,9 +1,8 @@
 # LLM-Eval
 
-LLM-Eval is an evaluation system for large language models, focused on measuring, reviewing, and comparing model responses on python coding tasks.
-
-It combines:
-
-* a CLI evaluation harness for reproducible, automated runs
-* sandboxed execution for objective correctness
-* LLM-assisted review to accelerate qualitative assessment.
+Key Components:
+- CLI Runner: orchestrates evaluation experiments
+- Docker Sandbox: safely executes generated code
+- LLM Judge: compares model outputs
+- Supabase: stores evaluation results and human feedback
+- Review UI: enables human preference annotation

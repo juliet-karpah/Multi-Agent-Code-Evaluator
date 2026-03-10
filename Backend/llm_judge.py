@@ -1,6 +1,5 @@
 import json
 from prompts.loader import load_prompt
-from app.models.Evaluation import JudgeEvalRecord
 
 class LLMJudge:
     def __init__(self, client, model, config, prompt_version):
@@ -37,12 +36,7 @@ class LLMJudge:
                 "reason": "Failed Judge Evaluation",
                 "confidence": 0.0
             }
-        
-
-        return JudgeEvalRecord({
-
-        })
-
+        return data
 
 
     
