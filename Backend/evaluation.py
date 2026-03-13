@@ -69,7 +69,9 @@ def run_evaluation(
     question_id: str,
     models: list[str],
     hf_client: HuggingClient,
-    prompt_version: str
+    prompt_version: str,
+    config_version: str,
+    dataset_version: str
 ):
     question = load_question(question_id)
     # models = resolve_models(models)
@@ -79,13 +81,16 @@ def run_evaluation(
 
     run_id = uuid.uuid4()
 
+    # might move run to run.py, runs should be per CLI run
+
     insert_run(
         {
             "id": str(run_id),
             "question_id": question_id,
             "models": models,
             "scoring_version": "v1.0",
-            "config": {"MAX_RUNTIME_MS": MAX_RUNTIME_MS},
+            "config_version": config_version,
+            "dataset_version": dataset_version
         }
     )
 
@@ -151,6 +156,7 @@ def run_evaluation(
                 "results": json.dumps(results),
                 "test_summary": json.dumps(test_summary),
                 "runtime_ms": sandbox_result.runtime_ms,
+                "solver_prompt_version": prompt_version
             }
         )
 
@@ -170,18 +176,18 @@ def run_evaluation(
             }
         )
 
-        log_run(
-            model_id=model,
-            question_id=question_id,
-            scoring_version="v1.0",
-            config={"MAX_RUNTIME_MS": MAX_RUNTIME_MS},
-            score=score,
-            agent_code=data["agent_code"],
-            raw_results={
-                "results": data["results"],
-                "test_summary": data["test_summary"],
-            },
-        )
+        # log_run(
+        #     model_id=model,
+        #     question_id=question_id,
+        #     scoring_version="v1.0",
+        #     config={"MAX_RUNTIME_MS": MAX_RUNTIME_MS},
+        #     score=score,
+        #     agent_code=data["agent_code"],
+        #     raw_results={
+        #         "results": data["results"],
+        #         "test_summary": data["test_summary"],
+        #     },
+        # )
 
     ranked = rank_models_per_run(scored_models)
 

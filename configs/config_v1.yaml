@@ -1,3 +1,5 @@
+version: v1
+
 models:
   source: infra/models/registry
   selected:
@@ -8,6 +10,7 @@ solver:
   prompt_version: v1
 
 questions:
+  version: v1
   file: backend/app/data/questions.json
   filter:
     difficulty: ["easy"]

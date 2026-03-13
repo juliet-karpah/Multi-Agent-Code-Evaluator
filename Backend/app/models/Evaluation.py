@@ -1,20 +1,24 @@
 from pydantic import BaseModel
-from typing import List, Any, Dict
+from typing import Any, Dict
 from infra.models.registry import Models
 from uuid import UUID
 
+class Model(BaseModel):
+    display_name: str
+    provider: str
+    model_key: str
+
 class RunRecord(BaseModel):
     id: UUID
-    models: List[int]
-    question_id: int
+    config_version: str
+    dataset_version: str
     scoring_version: str
-    config: Dict[str, Any] | None = None
-
 
 class RawEvaluationRecord(BaseModel):
     model_id: int
     question_id: int
     run_id: UUID
+    solver_prompt_version: str
     agent_code: str
     results: Dict[str, Any]
     test_summary: Dict[str, Any]
@@ -22,9 +26,7 @@ class RawEvaluationRecord(BaseModel):
 
 
 class ProblemScoreRecord(BaseModel):
-    model_id: int
-    question_id: int
-    run_id: UUID
+    evaluation_id: int
     problem_score: float
     pass_rate: float
     execution_success: bool
@@ -34,10 +36,10 @@ class ProblemScoreRecord(BaseModel):
 class JudgeEvalRecord(BaseModel):
     run_id: UUID 
     question_id: int
-    response_a_id: UUID
-    response_a_id: UUID
-    winner_response_id: UUID
+    response_a_id: int
+    response_b_id: int
+    winner_response_id: int
     reason: str
     judge_model_id: int
     prompt_version: str
-    confidence: float
+    judge_confidence: float #to do: change to pedagogy

@@ -1,6 +1,4 @@
 from infra.models.normalize import normalize_runtime
-from aggregation import model_stability
-from Backend.app.services import supabase_client
 
 MAX_RUNTIME_MS = 1500.0
 

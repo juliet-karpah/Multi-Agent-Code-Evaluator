@@ -71,7 +71,8 @@ async def main():
             question_id=question_id,
             models=resolved_models,
             hf_client=hf_client,
-            prompt_version=solver_prompt_version
+            prompt_version=solver_prompt_version,
+            config_version="config_v1"
         )
 
         print(f"Completed {question_id} and stored={result['run_id']}")
