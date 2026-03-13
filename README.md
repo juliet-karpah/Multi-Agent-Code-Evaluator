@@ -70,8 +70,7 @@ Why did Model A lose?
 [ ] incorrect complexity
 [x] fails edge case
 [ ] hallucinated
-
-<code>
+</code>
 
 
 ## Architectural Design
