@@ -1,24 +1,28 @@
-# LLM-Eval
+# LLM-Eval(My notes)
 
-Preference Data is crucial for reinforcement learning from human feedback. While code snippets from LLM have objective verifiable reward signals. 
+Testing code snippets from LLM with objective verifiers, LLM-judge, and Human Labels. 
 
 Verifier-> define objective metrics -> implement measurable checks -> generate verifiable signals 
 
+Human ranking(by domain expert, someone who is an expert on childhood education)
 
-// human ranking(by domain expert, someone who is an expert on childhood education)
-
-// combined rating:
+## combined review:
+Objective verifiers:
 - accuracy = code_reward(response, correct_answer)
 - format = format_check(response)
+
+Qualitative verifiers/signals:
 - quality = llm_judge(response) AI feedback data AI feedback with a frontier AI model, such as GPT-4o costs less than $0.01
 - human = if human(response) judge_confidence < 0.7 else None
 
 ## v1 
 one config represents one experimental execution
+
 1 CLI run = 1 experiment run
-eg python run.py --config config_v1.yaml
 
 - run CLI with config name
+
+eg ```python run.py --config config_v1.yaml```
 
 for every run
     - raw_eval rows
@@ -49,13 +53,12 @@ slice:
     - pedagogy, explanation clarity from judge
     - hallucination, syntax from human eval(if available)
 
-Human labeling:
+## Human labeling Required:
 
-Only required
+```if judge_confidence < 0.8:
+    -> show in review queue```
 
-if judge_confidence < 0.8:
-    -> show in review queue
-
+Human labeler chooses the winner and critiques the other model
 Winner: Model B
 
 Why did Model A lose?
@@ -77,15 +80,20 @@ Key Components:
 - Review UI: enables human preference annotation
 
 # Scaling 
+The app has two components:
+- the CLI component for running code snippets and storing in Supabase.
+- the frontend component for human labeling.
 
-## Phase 1: 25 questions and 2 models 
+
+## The CLI component:
+
+### Phase 1: Run 25 questions with 2 models(50 code snippets)
 - single developer
 - local execution
 - synchronous evaluations
-CLI -> Prompt Models -> Docker Sandbox -> Persist Results
 
-## Phase 2: 100 questions 
-- 4 developers running evaluations
-- CLI Runner -> Job Queue -> Worker Pool -> Docker Sandboxes
+```CLI -> Prompt Models -> Docker Sandbox -> Persist Results```
 
-## Phase 3:
+### Phase 2: 100 questions with 2 models(200 code snippets)
+- 8 workers with 25 questions each
+- CLI Runner -> Job Queue -> Worker Pool -> Docker Sandboxes -> Persist Results
