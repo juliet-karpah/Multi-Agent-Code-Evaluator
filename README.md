@@ -55,8 +55,7 @@ slice:
 
 ## Human labeling Required:
 
-```if judge_confidence < 0.8:
-    -> show in review queue```
+```if judge_confidence < 0.8: show in review queue```
 
 Human labeler chooses the winner and critiques the other model
 Winner: Model B
