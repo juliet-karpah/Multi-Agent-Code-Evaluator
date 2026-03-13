@@ -53,11 +53,16 @@ slice:
     - pedagogy, explanation clarity from judge
     - hallucination, syntax from human eval(if available)
 
-## Human labeling Required:
+## Human labeling Required If Low Confidence Score From LLM-Judge:
+
 
 ```if judge_confidence < 0.8: show in review queue```
 
-Human labeler chooses the winner and critiques the other model
+If the judge is unable to determine which model's response is better with a confidence of 80%, then the evaluation will be put into the human review queue. The human review queue is rendered in a ReactJS frontend.
+
+Human labeler chooses the winner. 
+
+<code>
 Winner: Model B
 
 Why did Model A lose?
@@ -65,6 +70,8 @@ Why did Model A lose?
 [ ] incorrect complexity
 [x] fails edge case
 [ ] hallucinated
+
+<code>
 
 
 ## Architectural Design
