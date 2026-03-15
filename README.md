@@ -1,19 +1,38 @@
 # LLM-Eval(My notes)
 
+## AI Usage Disclosure
+This project was not vibe-decoded but AI was used in the same way you would ask a senior engineering colleague over Slack design decisions. 
+Example questions I asked AI during this project: Will my sandbox setup break with recursive coding algorithms? 
+
+## Evaluation Strategy
+
 Testing code snippets from LLM with objective verifiers, LLM-judge, and Human Labels. 
 
 Verifier-> define objective metrics -> implement measurable checks -> generate verifiable signals 
 
 Human ranking(by domain expert, someone who is an expert on childhood education)
 
-## combined review:
-Objective verifiers:
+CLI Runner -> Prompt Dataset -> Model A + Model B -> Sandbox Execution -> Judge LLM -> Human Review -> Analytics
+
+## Combined review:
+Objective verifiers for quantitative correctness:
 - accuracy = code_reward(response, correct_answer)
 - format = format_check(response)
 
 Qualitative verifiers/signals:
 - quality = llm_judge(response) AI feedback data AI feedback with a frontier AI model, such as GPT-4o costs less than $0.01
 - human = if human(response) judge_confidence < 0.7 else None
+
+## Sandboxed Code execution
+Run LLM generated code safely in a containerized docker sandbox. This simple setup runs the llm code in a temporary file against tests in a subprocess with set timeouts. 
+
+The features of this safe docker sandbox:
+- fixed memory
+- fixed CPU
+- no network
+- fixed processes
+- readonly
+
 
 ## v1 
 one config represents one experimental execution
@@ -58,7 +77,7 @@ slice:
 
 ```if judge_confidence < 0.8: show in review queue```
 
-If the judge is unable to determine which model's response is better with a confidence of 80%, then the evaluation will be put into the human review queue. The human review queue is rendered in a ReactJS frontend.
+If the judge is unable to determine which model's response is better with a confidence of 80%, then the evaluation will be put into the human review queue. The human review queue is a list rendered in a ReactJS frontend.
 
 Human labeler chooses the winner. 
 
@@ -101,4 +120,4 @@ The app has two components:
 
 ### Phase 2: 100 questions with 2 models(200 code snippets)
 - 8 workers with 25 questions each
-- CLI Runner -> Job Queue -> Worker Pool -> Docker Sandboxes -> Persist Results
+```CLI Runner -> Job Queue -> Worker Pool -> Docker Sandboxes -> Persist Results```

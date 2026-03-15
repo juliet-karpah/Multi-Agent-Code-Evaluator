@@ -32,7 +32,8 @@ try:
     test_results.append({{"index": {i}, "output": repr(result_{i}), "error": None}})
 except Exception as e:
     test_results.append({{"index": {i}, "output": None, "error": str(e)}})
-""")
+"""
+            )
         f.write("\nprint(json.dumps(test_results))\n")
 
         return file_path
@@ -52,7 +53,22 @@ def run_code_in_sandbox(agent_code, tests, function_name):
     """
     file_path = write_to_temp_file(agent_code, tests, function_name)
     process = subprocess.Popen(
-        ["python3", file_path],
+        [
+            "docker",
+            "run",
+            "--rm",
+            "--network=none",
+            "--memory=256m",
+            "--cpus=0.5",
+            "--pids-limit=64",
+            "--tmpfs","/tmp",
+            "--read-only",
+            "-v",
+            f"{file_path}:/sandbox/code.py",
+            "python-sandbox",
+            "python",
+            "/sandbox/code.py",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -86,7 +102,7 @@ def run_code_in_sandbox(agent_code, tests, function_name):
             "runtime_ms": TIME_LIMIT * 1000,
             "exit_code": None,
             "timed_out": 1,
-            "crashed": 0,          
+            "crashed": 0,
             "execution_success": 0,
         }
 
