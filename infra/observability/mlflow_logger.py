@@ -3,41 +3,38 @@ import tempfile
 from pathlib import Path
 import json
 
+
 def log_run(
-    model_id,
-    question_id,
+    run_id,
+    config_version,
+    dataset_name,
+    dataset_version,
+    models,
     scoring_version,
-    config,
-    score,
-    agent_code,
-    raw_results,
+    metrics,
+    config_snapshot,
 ):
-   with mlflow.start_run():
-      mlflow.log_param("model_id", model_id)
-      mlflow.log_param("question_id", question_id)
+    with mlflow.start_run(run_name=str(run_id)):
+
+      mlflow.log_param("config_version", config_version)
+      mlflow.log_param("dataset_name", dataset_name)
+      mlflow.log_param("data_version", dataset_version)
+      mlflow.log_param("models", ",".join(models))
       mlflow.log_param("scoring_version", scoring_version)
 
-      for key, value in config.items():
+      for key, value in config_snapshot.items():
          mlflow.log_param(key, value)
-         
-      mlflow.log_metric("pass_rate", score["pass_rate"])
-      mlflow.log_metric("runtime_ms", score["runtime_ms"])
-      mlflow.log_metric("execution_success", score["execution_success"])
-      mlflow.log_metric("problem_score", score["problem_score"])
 
+      for metric_name, metric_value in metrics.items():
+         mlflow.log_metric(metric_name, metric_value)
 
       with tempfile.TemporaryDirectory() as tmpdir:
          tmpdir = Path(tmpdir)
 
-         code_path = tmpdir / "agent_code.py"
-         code_path.write_text(agent_code)
+         config_path = tmpdir / "config.json"
+         config_path.write_text(json.dumps(config_snapshot, indent=2))
 
-         result_path = tmpdir / "raw_results.json"
-         result_path.write_text(json.dumps(raw_results, indent=2))
-
-         mlflow.log_artifact(str(code_path))
-         mlflow.log_artifact(str(result_path))
-
+         mlflow.log_artifact(str(config_path))
 
    
 

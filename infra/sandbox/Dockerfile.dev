@@ -1,7 +1,11 @@
 FROM python:3.9-slim
 
+RUN useradd -m my_sandboxuser
+
 WORKDIR /sandbox
 
 COPY executor.py .
+
+USER my_sandboxuser
 
 CMD ["python", "executor.py"]

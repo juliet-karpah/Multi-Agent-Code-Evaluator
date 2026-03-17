@@ -1,5 +1,16 @@
 # LLM-Eval(My notes)
 
+## Architectural Design
+
+![design](https://github.com/juliet-karpah/Multi-Agent-Code-Evaluator/blob/main/architecture.png)
+
+Key Components:
+- CLI Runner: orchestrates evaluation experiments
+- Docker Sandbox: safely executes generated code
+- LLM Judge: compares model outputs
+- Supabase: stores evaluation results and human feedback
+- Review UI: enables human preference annotation
+
 ## AI Usage Disclosure
 This project was not vibe-decoded but AI was used in the same way you would ask a senior engineering colleague over Slack design decisions. 
 Example questions I asked AI during this project: Will my sandbox setup break with recursive coding algorithms? 
@@ -8,30 +19,56 @@ Example questions I asked AI during this project: Will my sandbox setup break wi
 
 Testing code snippets from LLM with objective verifiers, LLM-judge, and Human Labels. 
 
-Verifier-> define objective metrics -> implement measurable checks -> generate verifiable signals 
-
-Human ranking(by domain expert, someone who is an expert on childhood education)
-
 CLI Runner -> Prompt Dataset -> Model A + Model B -> Sandbox Execution -> Judge LLM -> Human Review -> Analytics
 
 ## Combined review:
-Objective verifiers for quantitative correctness:
-- accuracy = code_reward(response, correct_answer)
-- format = format_check(response)
 
-Qualitative verifiers/signals:
+### Quantitative Signals:
+- Runtime in milliseconds
+
+Verifier-> define objective metrics -> implement measurable checks -> generate verifiable signals
+
+sandbox results 
+-> score_problem() (model x question) 
+-> rank_models_per_run() (per question) 
+-> aggregate_dimension_scoring() (per model x run)
+
+
+
+
+### Quality Signals
 - quality = llm_judge(response) AI feedback data AI feedback with a frontier AI model, such as GPT-4o costs less than $0.01
 - human = if human(response) judge_confidence < 0.7 else None
 
 ## Sandboxed Code execution
-Run LLM generated code safely in a containerized docker sandbox. This simple setup runs the llm code in a temporary file against tests in a subprocess with set timeouts. 
+Run LLM generated code safely in a containerized docker sandbox. The sandbox is setup with layers of protection such as restricted permissions, runtime resource limits, and container isoloation in the event of malicious LLM output. 
 
 The features of this safe docker sandbox:
+- create a non-root user
 - fixed memory
 - fixed CPU
 - no network
 - fixed processes
 - readonly
+
+Docker process:
+- create a container from image
+- start python
+- run executor script
+- destroy container
+
+The program flow is as follows:
+run.py -> run_evaluation() -> run_code_in_sandbox() -> docker run python-sandbox -> python /sandbox/code.py
+
+
+## Running the evaluations
+- First build a container from the home directory
+
+```docker build -t python-sandbox infra/sandbox```
+
+- run evaluations
+
+```python run.py --config [latestConfig].yaml```
 
 
 ## v1 
@@ -92,22 +129,10 @@ Why did Model A lose?
 </code>
 
 
-## Architectural Design
-
-![design](https://github.com/juliet-karpah/Multi-Agent-Code-Evaluator/blob/main/architecture.png)
-
-Key Components:
-- CLI Runner: orchestrates evaluation experiments
-- Docker Sandbox: safely executes generated code
-- LLM Judge: compares model outputs
-- Supabase: stores evaluation results and human feedback
-- Review UI: enables human preference annotation
-
-# Scaling 
+# Scaling and Cost
 The app has two components:
 - the CLI component for running code snippets and storing in Supabase.
 - the frontend component for human labeling.
-
 
 ## The CLI component:
 
@@ -115,6 +140,13 @@ The app has two components:
 - single developer
 - local execution
 - synchronous evaluations
+
+50 sandbox runs
+
+docker startup 200-500msto startup docker
+
+
+
 
 ```CLI -> Prompt Models -> Docker Sandbox -> Persist Results```
 

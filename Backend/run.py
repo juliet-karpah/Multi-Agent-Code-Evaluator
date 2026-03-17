@@ -1,4 +1,5 @@
 import argparse
+import uuid
 import yaml
 from infra.models.huggingface import HuggingClient
 from Backend.util.questions import load_questions
@@ -6,7 +7,8 @@ from Backend.evaluation import run_evaluation
 from Backend.llm_judge import LLMJudge
 from infra.models.registry import resolve_models, Models, MODEL_REGISTRY
 from Backend.app.models.Evaluation import JudgeEvalRecord
-from Backend.app.services.supabase_client import insert_judge_eval
+from Backend.app.services.supabase_client import insert_judge_eval, insert_run
+from infra.observability.mlflow_logger import log_run
 
 
 def validate_config(config: dict):
@@ -64,6 +66,17 @@ async def main():
             prompt_version=judge_cfg["prompt_version"])
 
     solver_prompt_version = config["solver"]["prompt_version"]
+
+    run_id = uuid.uuid4()
+
+    insert_run(
+        {
+            "id": str(run_id),
+            "scoring_version": config['scoring']['version'],
+            "config_version": config['version'],
+            "dataset_version": config['version']
+        }
+    )
     for question_id in questions:
         print(f"Running Evaluation for Problem={question_id}")
         
@@ -72,7 +85,6 @@ async def main():
             models=resolved_models,
             hf_client=hf_client,
             prompt_version=solver_prompt_version,
-            config_version="config_v1"
         )
 
         print(f"Completed {question_id} and stored={result['run_id']}")
@@ -109,6 +121,17 @@ async def main():
             }
 
             insert_judge_eval(judge_record)
+    metrics = {} # implement the metrics for the run
+
+    log_run(
+    run_id=run_id,
+    config_version=config["version"],
+    dataset_name=config["questions"]["name"],
+    models=config["models"]["selected"],
+    scoring_version=config["scoring"]["version"],
+    metrics=metrics,
+    config_snapshot=config,
+    )
 
     print("Evaluation complete")
 

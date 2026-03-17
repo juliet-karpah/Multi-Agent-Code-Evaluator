@@ -2,14 +2,13 @@ import uuid
 import json
 import ast
 
-from infra.sandbox.executor import run_code_in_sandbox
+from infra.sandbox.sandbox_runner import run_code_in_sandbox
 # from infra.models.registry import resolve_models
 from util.questions import load_question
 from infra.models.huggingface import HuggingClient
 from prompts.loader import load_prompt
 from infra.models.scoring import score_problem, rank_models_per_run
-from app.services.supabase_client import insert_run, insert_raw_eval, insert_problem_score
-from infra.observability.mlflow_logger import log_run
+from app.services.supabase_client import insert_raw_eval, insert_problem_score
 
 MAX_RUNTIME_MS = 1500.0
 
@@ -32,8 +31,14 @@ def process_sandbox_response(response, tests):
     Process the results from running the code in the sandbox
     """
     results = []
+    start = response.find("SANDBOX_RESULT_START")
+    end = response.find("SANDBOX_RESULT_END")
+
+    if start == -1 or end == -1:
+        return {"error": "Missing sandbox marker", "sandbox_output": response}
+    json_text = response[start + len("SANDBOX_RESULT_START"):end].strip()
     try:
-        test_results = json.loads(response.strip())
+        test_results = json.loads(json_text)
     except json.JSONDecodeError:
         return {"error": "Invalid sandbox result", "sandbox_output": response}
 
@@ -70,29 +75,13 @@ def run_evaluation(
     models: list[str],
     hf_client: HuggingClient,
     prompt_version: str,
-    config_version: str,
-    dataset_version: str
+    run_id: str
 ):
     question = load_question(question_id)
     # models = resolve_models(models)
 
     if not question:
         raise ValueError(f"Question does not exist: {question_id}")
-
-    run_id = uuid.uuid4()
-
-    # might move run to run.py, runs should be per CLI run
-
-    insert_run(
-        {
-            "id": str(run_id),
-            "question_id": question_id,
-            "models": models,
-            "scoring_version": "v1.0",
-            "config_version": config_version,
-            "dataset_version": dataset_version
-        }
-    )
 
     system_prompt = load_prompt("solver", prompt_version, "system")
     user_prompt =  prompt = f"""
@@ -108,6 +97,8 @@ def run_evaluation(
     )
 
     model_results = {}
+
+    evaluation_id = str(uuid.uuid4())
 
     for model, agent_response in agent_responses.items():
 
@@ -149,8 +140,9 @@ def run_evaluation(
 
         insert_raw_eval(
             {
-                "run_id": str(run_id),
+                "id": evaluation_id,
                 "model_id": model,
+                "run_id": run_id,
                 "question_id": question_id,
                 "agent_code": agent_response,
                 "results": json.dumps(results),
@@ -169,30 +161,17 @@ def run_evaluation(
 
         insert_problem_score(
             {
-                "run_id": str(run_id),
+                "evaluation_id": evaluation_id,
                 "model_id": model,
                 "question_id": question_id,
                 **score,
             }
         )
 
-        # log_run(
-        #     model_id=model,
-        #     question_id=question_id,
-        #     scoring_version="v1.0",
-        #     config={"MAX_RUNTIME_MS": MAX_RUNTIME_MS},
-        #     score=score,
-        #     agent_code=data["agent_code"],
-        #     raw_results={
-        #         "results": data["results"],
-        #         "test_summary": data["test_summary"],
-        #     },
-        # )
-
     ranked = rank_models_per_run(scored_models)
 
     return {
-        "run_id": str(run_id),
+        "evaluation_id": evaluation_id, 
         "question_id": question_id,
         "results": model_results,
         "scores": scored_models,

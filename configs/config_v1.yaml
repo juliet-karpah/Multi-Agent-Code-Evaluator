@@ -11,9 +11,13 @@ solver:
 
 questions:
   version: v1
+  name: array_easy
   file: backend/app/data/questions.json
   filter:
     difficulty: ["easy"]
+
+scoring:
+  version: v1
 
 judge:
   enabled: true
