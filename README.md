@@ -9,6 +9,7 @@ Key Components:
 - Docker Sandbox: safely executes generated code
 - LLM Judge: compares model outputs
 - Supabase: stores evaluation results and human feedback
+- MLFlow: for experiment tracking
 - Review UI: enables human preference annotation
 
 ## AI Usage Disclosure
@@ -32,8 +33,6 @@ sandbox results
 -> score_problem() (model x question) 
 -> rank_models_per_run() (per question) 
 -> aggregate_dimension_scoring() (per model x run)
-
-
 
 
 ### Quality Signals
@@ -153,3 +152,8 @@ docker startup 200-500msto startup docker
 ### Phase 2: 100 questions with 2 models(200 code snippets)
 - 8 workers with 25 questions each
 ```CLI Runner -> Job Queue -> Worker Pool -> Docker Sandboxes -> Persist Results```
+
+## Resources
+[Anthropic Evals For AI Agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
+[Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/)
+[Preference Data](https://rlhfbook.com/c/11-preference-data)
