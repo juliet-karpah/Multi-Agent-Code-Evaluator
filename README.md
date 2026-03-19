@@ -59,11 +59,10 @@ The program flow is as follows:
 
 Sandbox results are:
 
-<code>
--> score_problem() (model x question) 
--> rank_models_per_run() (per question) 
--> aggregate_dimension_scoring() (per model x run)
-</code>
+- score_problem() (model x question) 
+- rank_models_per_run() (per question) 
+- aggregate_dimension_scoring() (per model x run)
+
 
 ### LLM-as-judge
 
