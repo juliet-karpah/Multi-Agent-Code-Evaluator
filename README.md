@@ -149,6 +149,8 @@ Signals:
 - Qualitative (LLM Judge)
 - Human rater (me)
 
+Results:
+
 | Model              | Code Correctness | Performance | Pedagogy Score | Human Win Rate |
 | :---------------- | :------: | ----: | :------: | ----: |
 | Qwen        |   True   | 23.99 |  20 | 40 |
@@ -170,7 +172,9 @@ LLM APIs
 
 ## Resources and References
 [Anthropic Evals For AI Agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
+
 [Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/)
+
 [Preference Data](https://rlhfbook.com/c/11-preference-data)
 
 
