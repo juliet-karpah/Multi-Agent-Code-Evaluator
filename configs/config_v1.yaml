@@ -11,10 +11,10 @@ solver:
 
 questions:
   version: v1
-  name: array_easy
   file: backend/app/data/questions.json
   filter:
-    difficulty: ["easy"]
+    difficulty: ["easy","medium"]
+    topics: ["arrays", "strings"]
 
 scoring:
   version: v1

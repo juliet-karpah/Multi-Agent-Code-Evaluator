@@ -1,4 +1,6 @@
-# LLM-Eval(My notes)
+# LLM Evaluation and Human Preference System
+
+The project is structured to run experiments comparing multiple "smaller" coding models, grades generated code in docker sandboxes with automated tests, LLM-as-judge, and human review.
 
 ## Architectural Design
 
@@ -16,31 +18,21 @@ Key Components:
 This project was not vibe-decoded but AI was used in the same way you would ask a senior engineering colleague over Slack design decisions. 
 Example questions I asked AI during this project: Will my sandbox setup break with recursive coding algorithms? 
 
-## Evaluation Strategy
+## Evaluation Strategy and Core Features
 
 Testing code snippets from LLM with objective verifiers, LLM-judge, and Human Labels. 
 
 CLI Runner -> Prompt Dataset -> Model A + Model B -> Sandbox Execution -> Judge LLM -> Human Review -> Analytics
 
-## Combined review:
+## Core Features
 
-### Quantitative Signals:
-- Runtime in milliseconds
+### CLI Experiment Runner
 
-Verifier-> define objective metrics -> implement measurable checks -> generate verifiable signals
-
-sandbox results 
--> score_problem() (model x question) 
--> rank_models_per_run() (per question) 
--> aggregate_dimension_scoring() (per model x run)
-
-
-### Quality Signals
-- quality = llm_judge(response) AI feedback data AI feedback with a frontier AI model, such as GPT-4o costs less than $0.01
-- human = if human(response) judge_confidence < 0.7 else None
+Each experiment runs verifiers on coding algorithms solved by LLM coding models. The verifiers provide quantitavie signals such as code correctness, runtime, and execution success.
 
 ## Sandboxed Code execution
-Run LLM generated code safely in a containerized docker sandbox. The sandbox is setup with layers of protection such as restricted permissions, runtime resource limits, and container isoloation in the event of malicious LLM output. 
+The containerized docker sandbox safely runs agent generated code against automated test cases. 
+The sandbox is setup with layers of protection such as restricted permissions, runtime resource limits, and container isoloation in the event of malicious LLM output. 
 
 The features of this safe docker sandbox:
 - create a non-root user
@@ -59,6 +51,39 @@ Docker process:
 The program flow is as follows:
 run.py -> run_evaluation() -> run_code_in_sandbox() -> docker run python-sandbox -> python /sandbox/code.py
 
+sandbox results 
+-> score_problem() (model x question) 
+-> rank_models_per_run() (per question) 
+-> aggregate_dimension_scoring() (per model x run)
+
+## LLM-as-judge
+
+A "better" or "stronger" LLM is used to judge the responses from the smaller LLMs. The LLM returns qualitative signals such as clarity and pedagogy of the explanation. The LLM judge returns a confidence score for each algorithm, which determines which evaluation is set for human evaluation.
+
+
+## Human Labeling For Low Confidence
+
+```if judge_confidence < 0.8: show in review queue```
+
+If the judge is unable to determine which model's response is better with a confidence of 80%, then the evaluation will be put into the human review queue. The human review process provides human preference signals.
+
+Reviewers will rate the response and tag violations such as:
+- missing edge case
+- hallucination
+- unclear pedagogy
+
+Human labeler chooses the winner. 
+
+<code>
+Winner: Model B
+
+Why did Model A lose?
+
+[ ] incorrect complexity
+[x] fails edge case
+[ ] hallucinated
+</code>
+
 
 ## Running the evaluations
 - First build a container from the home directory
@@ -69,8 +94,6 @@ run.py -> run_evaluation() -> run_code_in_sandbox() -> docker run python-sandbox
 
 ```python run.py --config [latestConfig].yaml```
 
-
-## v1 
 one config represents one experimental execution
 
 1 CLI run = 1 experiment run
@@ -108,27 +131,54 @@ slice:
     - pedagogy, explanation clarity from judge
     - hallucination, syntax from human eval(if available)
 
-## Human labeling Required If Low Confidence Score From LLM-Judge:
+
+## Experiments
+
+### Experiment 1: Educational Coding Task Evaluation
+
+Dataset:
+- 10 coding questions
+- topics: arrays, strings
+- categories: easy, medium
+
+Solver Models:
+- qwen
+- mistral
+
+Signals:
+- Quantitative (sandbox tests)
+- Qualitative (LLM Judge)
+- Human rater (me)
+
+| Model | Code Correctness | Performance | Pedagogy Score | Human Win Rate|
+|-------|: -----------------|:-----------:|---------------:|--------------:|
+| Qwen | - | - | - | - |
+| Mistral | - | - | - | - |
+
+Observations:
+
+Failure Patterns:
 
 
-```if judge_confidence < 0.8: show in review queue```
+## Technology
+Python
+Docker
+React
+Redux
+MLFlow
+Supabase
+LLM APIs
 
-If the judge is unable to determine which model's response is better with a confidence of 80%, then the evaluation will be put into the human review queue. The human review queue is a list rendered in a ReactJS frontend.
-
-Human labeler chooses the winner. 
-
-<code>
-Winner: Model B
-
-Why did Model A lose?
-
-[ ] incorrect complexity
-[x] fails edge case
-[ ] hallucinated
-</code>
+## Resources and References
+[Anthropic Evals For AI Agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
+[Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/)
+[Preference Data](https://rlhfbook.com/c/11-preference-data)
 
 
-# Scaling and Cost
+
+
+
+# Scaling and Cost(random miscellaneous notes)
 The app has two components:
 - the CLI component for running code snippets and storing in Supabase.
 - the frontend component for human labeling.
@@ -142,18 +192,10 @@ The app has two components:
 
 50 sandbox runs
 
-docker startup 200-500msto startup docker
-
-
-
+docker startup 200-500ms to startup docker
 
 ```CLI -> Prompt Models -> Docker Sandbox -> Persist Results```
 
 ### Phase 2: 100 questions with 2 models(200 code snippets)
 - 8 workers with 25 questions each
 ```CLI Runner -> Job Queue -> Worker Pool -> Docker Sandboxes -> Persist Results```
-
-## Resources
-[Anthropic Evals For AI Agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
-[Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/)
-[Preference Data](https://rlhfbook.com/c/11-preference-data)
