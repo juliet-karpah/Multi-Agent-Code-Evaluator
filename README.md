@@ -11,11 +11,11 @@ Key Components:
 - Docker Sandbox: safely executes generated code
 - LLM Judge: compares model outputs
 - Supabase: stores evaluation results and human feedback
-- MLFlow: for experiment tracking
+- MLFlow: tracks aggregated metrics for each experiment
 - Review UI: enables human preference annotation
 
 ## AI Usage Disclosure
-This project was not vibe-decoded but AI was used in the same way you would ask a senior engineering colleague over Slack design decisions. 
+This project was not vibe-decoded but AI was used in the same way you would ask a senior engineer design queestions over Slack. 
 Example questions I asked AI during this project: Will my sandbox setup break with recursive coding algorithms? 
 
 ## Evaluation Strategy and Core Features
@@ -28,7 +28,7 @@ CLI Runner -> Prompt Dataset -> Model A + Model B -> Sandbox Execution -> Judge 
 
 ### CLI Experiment Runner
 
-Each experiment runs verifiers on coding algorithms solved by LLM coding models. The verifiers provide quantitavie signals such as code correctness, runtime, and execution success.
+Each experiment runs verifiers on coding algorithms solved by LLM coding models. The verifiers provide quantitative signals such as code correctness, runtime, and execution success.
 
 ### Sandboxed Code execution
 The containerized docker sandbox safely runs agent generated code against automated test cases. 
@@ -49,16 +49,20 @@ Docker process:
 - destroy container
 
 The program flow is as follows:
-run.py -> run_evaluation() -> run_code_in_sandbox() -> docker run python-sandbox -> python /sandbox/code.py
 
-sandbox results 
+```run.py -> run_evaluation() -> run_code_in_sandbox() -> docker run python-sandbox -> python /sandbox/code.py```
+
+Sandbox results are:
+
+<code>
 -> score_problem() (model x question) 
 -> rank_models_per_run() (per question) 
 -> aggregate_dimension_scoring() (per model x run)
+</code>
 
 ### LLM-as-judge
 
-A "better" or "stronger" LLM is used to judge the responses from the smaller LLMs. The LLM returns qualitative signals such as clarity and pedagogy of the explanation. The LLM judge returns a confidence score for each algorithm, which determines which evaluation is set for human evaluation.
+A "better" or "stronger" LLM is used to judge the responses from the smaller LLMs. The LLM returns qualitative signals such as clarity and pedagogy of the explanation. This LLM judge also returns a confidence score for each submission, that determines which evaluation is send to the human review queue.
 
 
 ### Human Labeling For Low Confidence
@@ -114,14 +118,9 @@ Run #1
 Config: config_v1
 Models: QWEN vs MISTRAL
 Questions: 10
-Win rate: 57%
 
-win rate is determined by the llm judge unless it has a confidence score of <80 and the human reviewer decides. 
-
-why 80? I am not sure. I just picked this. 
-
-run details 
-
+Run details: 
+Win rate: 57% (determined by the llm judge unless it has a confidence score of <80 and the human reviewer decides.)
 slice:
 - dataset slice
     - topic(dp, array, graph)
@@ -150,10 +149,10 @@ Signals:
 - Qualitative (LLM Judge)
 - Human rater (me)
 
-| Model | Code Correctness | Performance | Pedagogy Score | Human Win Rate|
-|-------|: -----------------|:-----------:|---------------:|--------------:|
-| Qwen | - | - | - | - |
-| Mistral | - | - | - | - |
+| Model              | Code Correctness | Performance | Pedagogy Score | Human Win Rate |
+| :---------------- | :------: | ----: | :------: | ----: |
+| Qwen        |   True   | 23.99 |  20 | 40 |
+| Mistral           |   True   | 23.99 | 40 | 50 |
 
 Observations:
 
