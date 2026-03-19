@@ -85,8 +85,8 @@ Winner: Model B
 
 Why did Model A lose?
 
-[ ] incorrect complexity
-[x] fails edge case
+[ ] incorrect complexity <br>
+[x] fails edge case <br>
 [ ] hallucinated
 
 ## Running the evaluations
@@ -111,12 +111,12 @@ for every run - raw_eval rows - model A × question 1 - model B × question 1 - 
 
 example of a run:
 
-Run #1
+Run #1 <br>
 Config: config_v1
 Models: QWEN vs MISTRAL
 Questions: 10
 
-Run details:
+Run details: <br>
 Win rate: 57% (determined by the llm judge unless it has a confidence score of <80 and the human reviewer decides.)
 slice:
 
