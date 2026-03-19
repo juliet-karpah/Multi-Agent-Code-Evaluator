@@ -30,7 +30,7 @@ CLI Runner -> Prompt Dataset -> Model A + Model B -> Sandbox Execution -> Judge 
 
 Each experiment runs verifiers on coding algorithms solved by LLM coding models. The verifiers provide quantitavie signals such as code correctness, runtime, and execution success.
 
-## Sandboxed Code execution
+### Sandboxed Code execution
 The containerized docker sandbox safely runs agent generated code against automated test cases. 
 The sandbox is setup with layers of protection such as restricted permissions, runtime resource limits, and container isoloation in the event of malicious LLM output. 
 
@@ -56,12 +56,12 @@ sandbox results
 -> rank_models_per_run() (per question) 
 -> aggregate_dimension_scoring() (per model x run)
 
-## LLM-as-judge
+### LLM-as-judge
 
 A "better" or "stronger" LLM is used to judge the responses from the smaller LLMs. The LLM returns qualitative signals such as clarity and pedagogy of the explanation. The LLM judge returns a confidence score for each algorithm, which determines which evaluation is set for human evaluation.
 
 
-## Human Labeling For Low Confidence
+### Human Labeling For Low Confidence
 
 ```if judge_confidence < 0.8: show in review queue```
 
