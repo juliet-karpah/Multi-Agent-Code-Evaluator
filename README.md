@@ -59,10 +59,9 @@ The program flow is as follows:
 
 Sandbox results are:
 
-- score_problem() (model x question) 
-- rank_models_per_run() (per question) 
+- score_problem() (model x question)
+- rank_models_per_run() (per question)
 - aggregate_dimension_scoring() (per model x run)
-
 
 ### LLM-as-judge
 
@@ -82,7 +81,6 @@ Reviewers will rate the response and tag violations such as:
 
 Human labeler chooses the winner.
 
-<code>
 Winner: Model B
 
 Why did Model A lose?
@@ -90,7 +88,6 @@ Why did Model A lose?
 [ ] incorrect complexity
 [x] fails edge case
 [ ] hallucinated
-</code>
 
 ## Running the evaluations
 
