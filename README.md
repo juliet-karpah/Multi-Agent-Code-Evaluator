@@ -151,10 +151,9 @@ Signals:
 
 Results:
 
-| Model   | Code Correctness | Performance | Pedagogy Score | Human Win Rate |
-| :------ | :--------------: | ----------: | :------------: | -------------: |
-| Qwen    |       True       |       23.99 |       20       |             40 |
-| Mistral |       True       |       23.99 |       40       |             50 |
+Model    | Pass Rate | Avg Runtime | Pedagogy | Human Win Rate
+Qwen     | 0.82      | 120 ms      | 0.71     | 0.40
+Mistral  | 0.79      | 135 ms      | 0.75     | 0.50
 
 Observations:
 
@@ -178,28 +177,35 @@ Failure Patterns:
 
 [Preference Data](https://rlhfbook.com/c/11-preference-data)
 
-# Scaling and Cost(random miscellaneous notes)
 
-The app has two components:
+## Random miscellaneous notes
 
-- the CLI component for running code snippets and storing in Supabase.
-- the frontend component for human labeling.
+### Scaling the sandbox
 
-## The CLI component:
+#### V1: The Current Setup:
 
-### Phase 1: Run 25 questions with 2 models(50 code snippets)
-
-- single developer
+- single-process evaluator
 - local execution
 - synchronous evaluations
+- Good for 10-20 questions and 3 models
 
-50 sandbox runs
-
-docker startup 200-500ms to startup docker
+cost = 
 
 `CLI -> Prompt Models -> Docker Sandbox -> Persist Results`
+#### V2: Pararell execution
+To increase speed, I use ThreadPoolExecutor to start 2-4 containers instead of one.
 
-### Phase 2: 100 questions with 2 models(200 code snippets)
+#### V3: Not currently applicable
+This would become applicable if testing models with 1000 coding algorithms at once. 
 
-- 8 workers with 25 questions each
-  `CLI Runner -> Job Queue -> Worker Pool -> Docker Sandboxes -> Persist Results`
+Flow:
+
+CLI/API -> Redis Queue -> Workers(run docker containers)
+
+### Triger environment
+- V1: CLI/local machine
+
+
+
+
+
