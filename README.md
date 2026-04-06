@@ -160,7 +160,6 @@ Observations:
 Failure Patterns:
 
 ## Technology
-
 - Python
 - Docker
 - React
@@ -171,11 +170,13 @@ Failure Patterns:
 
 ## Resources and References
 
-[Anthropic Evals For AI Agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
+[Anthropic Evals For AI Agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) <br>
 
-[Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/)
+[Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/) <br>
 
-[Preference Data](https://rlhfbook.com/c/11-preference-data)
+[Preference Data](https://rlhfbook.com/c/11-preference-data)<br>
+
+[Agentic Engineer Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/)
 
 
 ## Random miscellaneous notes
