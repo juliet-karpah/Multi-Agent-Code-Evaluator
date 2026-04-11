@@ -11,9 +11,8 @@ Key Components:
 - CLI Runner: orchestrates evaluation experiments
 - Docker Sandbox: safely executes generated code
 - LLM Judge: compares model outputs
-- Supabase: stores evaluation results and human feedback
+- Supabase: stores evaluation results and analytics
 - MLFlow: tracks aggregated metrics for each experiment
-- Review UI: enables human preference annotation
 
 ## AI Usage Disclosure
 
@@ -22,9 +21,9 @@ Example questions I asked AI during this project: Will my sandbox setup break wi
 
 ## Evaluation Strategy and Core Features
 
-Testing code snippets from LLM with objective verifiers, LLM-judge, and Human Labels.
+Testing code snippets from LLM with objective verifiers and LLM-judge.
 
-CLI Runner -> Prompt Dataset -> Model A + Model B -> Sandbox Execution -> Judge LLM -> Human Review -> Analytics
+CLI Runner -> Prompt Dataset -> Model A + Model B -> Sandbox Execution -> Judge LLM -> Analytics
 
 ## Core Features
 
@@ -65,29 +64,7 @@ Sandbox results are:
 
 ### LLM-as-judge
 
-A "better" or "stronger" LLM is used to judge the responses from the smaller LLMs. The LLM returns qualitative signals such as clarity and pedagogy of the explanation. This LLM judge also returns a confidence score for each submission, that determines which evaluation is send to the human review queue.
-
-### Human Labeling For Low Confidence
-
-`if judge_confidence < 0.8: show in review queue`
-
-If the judge is unable to determine which model's response is better with a confidence of 80%, then the evaluation will be put into the human review queue. The human review process provides human preference signals.
-
-Reviewers will rate the response and tag violations such as:
-
-- missing edge case
-- hallucination
-- unclear pedagogy
-
-Human labeler chooses the winner.
-
-Winner: Model B
-
-Why did Model A lose?
-
-[ ] incorrect complexity <br>
-[x] fails edge case <br>
-[ ] hallucinated
+A "better" or "stronger" LLM is used to judge the responses from the smaller LLMs. The LLM returns qualitative signals such as clarity and pedagogy of the explanation. This LLM judge also returns a confidence score for each submission.
 
 ## Running the evaluations
 
@@ -117,7 +94,7 @@ Models: QWEN vs MISTRAL
 Questions: 10
 
 Run details: <br>
-Win rate: 57% (determined by the llm judge unless it has a confidence score of <80 and the human reviewer decides.)
+Win rate: 57% 
 slice:
 
 - dataset slice
@@ -126,7 +103,6 @@ slice:
 - error slice:
   - timeout, crash, execution error from sandbox
   - pedagogy, explanation clarity from judge
-  - hallucination, syntax from human eval(if available)
 
 ## Experiments
 
@@ -147,11 +123,10 @@ Signals:
 
 - Quantitative (sandbox tests)
 - Qualitative (LLM Judge)
-- Human rater (me)
 
 Results:
 
-Model    | Pass Rate | Avg Runtime | Pedagogy | Human Win Rate
+Model    | Pass Rate | Avg Runtime | Pedagogy | Win Rate
 Qwen     | 0.82      | 120 ms      | 0.71     | 0.40
 Mistral  | 0.79      | 135 ms      | 0.75     | 0.50
 
@@ -162,8 +137,6 @@ Failure Patterns:
 ## Technology
 - Python
 - Docker
-- React
-- Redux
 - MLFlow
 - Supabase
 - LLM APIs
@@ -183,18 +156,18 @@ Failure Patterns:
 
 ### Scaling the sandbox
 
-#### V1: The Current Setup:
+#### V1: The Current Setup
 
 - single-process evaluator
 - local execution
 - synchronous evaluations
 - Good for 10-20 questions and 3 models
 
-cost = 
-
 `CLI -> Prompt Models -> Docker Sandbox -> Persist Results`
+
 #### V2: Pararell execution
-To increase speed, I use ThreadPoolExecutor to start 2-4 containers instead of one.
+
+ThreadPoolExecutor to start 2-4 containers instead of one.
 
 #### V3: Not currently applicable
 This would become applicable if testing models with 1000 coding algorithms at once. 
