@@ -31,5 +31,4 @@ class ModelClient(ABC):
                 results[model] = {"success": True, "error": None, "output": await task}
             except Exception as e:
                 results[model] = {"success": False, "error": str(e), "output": None}
-
         return results
