@@ -31,10 +31,10 @@ Each experiment runs verifiers on coding algorithms solved by LLM coding models.
 
 ### Sandboxed Code execution
 
-The containerized docker sandbox safely runs agent generated code against automated test cases.
-The sandbox is setup with layers of protection such as restricted permissions, runtime resource limits, and container isoloation in the event of malicious LLM output.
+The containerized Docker sandbox safely runs agent-generated code against automated test cases.
+The sandbox is set up with layers of protection such as restricted permissions, runtime resource limits, and container isolation in the event of malicious LLM output.
 
-The features of this safe docker sandbox:
+The features of this safe Docker sandbox:
 
 - create a non-root user
 - fixed memory
@@ -45,8 +45,8 @@ The features of this safe docker sandbox:
 
 Docker process:
 
-- create a container from image
-- start python
+- Create a container from an image
+- start Python
 - run executor script
 - destroy container
 
@@ -66,7 +66,7 @@ A "better" or "stronger" LLM is used to rate the correct responses from the smal
 
 ## Running the evaluations
 
-- First build a container from the home directory
+- First, build a container from the home directory
 
 `docker build -t python-sandbox infra/sandbox`
 
@@ -74,13 +74,13 @@ A "better" or "stronger" LLM is used to rate the correct responses from the smal
 
 `python run.py --config [latestConfig].yaml`
 
-one config represents one experimental execution
+One config represents one experimental execution
 
 1 CLI run = 1 experiment run
 
 - run CLI with config name
 
-eg `python run.py --config config_v1.yaml`
+e.g., `python run.py --config config_v1.yaml.`
 
 for every run - raw_eval rows - model A × question 1 - model B × question 1 - model A × question 2
 
