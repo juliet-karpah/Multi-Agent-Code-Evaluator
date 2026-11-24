@@ -46,7 +46,6 @@ infra/
   aggregation/    run-level scoring and stability
   observability/  MLflow logger
 configs/          experiment configs (config_v1.yaml)
-frontend/         React + TypeScript dashboard (in progress)
 ```
 
 ## Getting started
@@ -81,7 +80,6 @@ Python, Docker, Hugging Face Inference API, Supabase, MLflow, FastAPI, React + T
 - [ ] Run-level metrics logged to MLflow
 - [ ] Larger question set (currently 5 seed questions)
 - [ ] CI check against saved model responses
-- [ ] Dashboard
 
 ## References
 
